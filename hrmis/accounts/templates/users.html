@@ -1,0 +1,88 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% block title %}Users{% endblock %}
+{% block css %}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+{% endblock %}
+{% block pagetitle %}
+Users
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item active">Users</li>
+{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+                <a href="{% url 'accounts:sign_up' %}">Add User</a>
+              
+                <!-- {% if not filter == None %}
+                <a href="{% url 'accounts:users' %}">
+                  remove 
+                </a>
+                {% endif %} -->
+               
+              </h5>
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                    </button>
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+            <hr>
+            <!-- Default Table -->
+            <table class="table" id="users">
+              <thead>
+                <tr>
+                  
+                  <th scope="col">Employee ID</th>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">Designation</th>
+                  <th scope="col">Date Joined</th>
+                  <th scope="col">Active</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in obj %}
+                <tr>  
+                  <td><strong><a href="{% url 'accounts:profile' user.pk %}">{{user.username}}</a> </strong> </td>
+                  <td>{{user.first_name|title}} {{user.last_name|title}}</td>
+                  <td>{{user.designation|title}}</td>
+                  <td>{{user.date_joined}}</td>
+                  <td><a href="{% url 'accounts:toggle_user_status' user.pk %}">
+                    {% if user.is_active %}
+                    <i class="bi bi-circle-fill" style="color:green;"></i>
+                    {% else %}
+                    <i class="bi bi-circle-fill" style="color:red;"></i>
+                    {% endif %}
+                  </a></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+{% endblock %}
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#users').DataTable();
+});
+</script>
+{% endblock %}

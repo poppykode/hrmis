@@ -1,0 +1,87 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Tasks for Employee {{qs_user.get_full_name|title}}
+{% endblock %}
+{% block pagetitle %}
+Tasks for Employee {{qs_user.get_full_name|title}}
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item"><a href="{% url 'accounts:profile' qs_user.pk %}">Profile</a></li>
+<li class="breadcrumb-item active">
+    Tasks for Employee {{qs_user.get_full_name|title}}
+</li>
+{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="row align-items-top">
+        <!-- Default Card -->
+        {% for task in  obj %}
+        <div class="col-md-6">
+        <div class="card">
+          <div class="filter">
+            <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+              <li class="dropdown-header text-start">
+                <h6>Actions</h6>
+              </li>
+              {% if request.user.is_admin %}
+              <li><a class="dropdown-item" href="{% url 'tasks:task_update' task.pk %}"><i class="bx bxs-pencil"></i> Update</a></li>
+              {% else %}     
+              <li><a class="dropdown-item" href="{% url 'tasks:task_update_for_employee' task.pk %}"><i class="bx bxs-pencil"></i> Update</a></li>
+              {% endif %}
+            
+            </ul>
+          </div>
+          <div class="card-body">
+              {% if task.is_past_due %}
+              <h5 class="card-title" style="color: red;">          
+              {% else %}
+              <h5 class="card-title" style="color: green;">
+              {% endif %}
+              {{task.title|title}}
+           
+            </h5>
+            <div>
+              {% if task.is_past_due %}
+              <span class="badge bg-danger">
+                <i class="bi bi-exclamation-octagon me-1"></i>
+                {% else %}
+                <span class="badge bg-success">
+                  <i class="bi bi-check-circle me-1"></i>
+                  {% endif %}
+                Start Date: {{task.start_date}}</span> - 
+                {% if task.is_past_due %}
+                <span class="badge bg-danger">
+                  <i class="bi bi-exclamation-octagon me-1"></i>
+                  {% else %}
+                  <span class="badge bg-success">
+                    <i class="bi bi-check-circle me-1"></i>
+                    {% endif %}
+                End Date: {{task.end_date}}</span>
+            </div>
+           <br>
+            <p><strong>Status:</strong> {{task.status|title}}</p>
+           <p><strong>Priority:</strong> {{task.priority|title}}</p>
+           {% if request.user.is_admin %}
+           <p><strong>Resource:</strong>  {{task.resource.get_full_name|title}}</p>
+           {% endif %}
+           <p><strong>Date Created:</strong>  {{task.timestamp}}</p>
+           <br>
+           <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width: {{task.percentage_complition}}%" aria-valuenow="{{task.percentage_complition}}" aria-valuemin="0" aria-valuemax="100">{{task.percentage_complition}}%</div>
+          </div>
+          </div>
+        </div><!-- End Default Card -->
+      </div>
+        {% empty %}
+        <h4>No tasks added</h4>
+       {% endfor %}
+
+      
+
+    </div>
+  </section>
+
+{% endblock %}

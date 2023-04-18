@@ -1,0 +1,29 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% block title %}{{obj.name|title}}{% endblock %}
+{% block pagetitle %}
+{{obj.name|title}}
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item"><a href="{% url 'projects:projects' %}">Projects</a></li>
+<li class="breadcrumb-item"><a href="{% url 'projects:project_details' obj.pk %}">{{obj.name|title}}</a></li>
+<li class="breadcrumb-item active">{{obj.name|title}}</li>
+{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{obj.name|title}}</h5>
+          
+            {% autoescape off %}
+            {{ plot_div }}
+           {% endautoescape %}
+            
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

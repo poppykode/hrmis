@@ -1,0 +1,145 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% block title %}Admin Dash{% endblock %}
+{% block pagetitle %}
+Admin Dashboard
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item active">Admin Dashboard</li>
+{% endblock %}
+{% block css %}
+<style>
+  div.hrmis-scroll {
+  height: 350px;
+  overflow: scroll;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="col-md-12">
+  <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+      </button>
+      {{ message }}
+  </div>
+</div>
+  {% endfor %}
+  {% endif %}
+  <div class="col-lg-8">
+    <div class="row">
+      <div class="col-md-12">
+        <h6><strong>Total Number of Users:</strong>  <span class="badge bg-primary">{{total}}</span> </h6>
+      </div>
+    <!-- Sales Card -->
+    <div class="col-xxl-4 col-md-6">
+      <div class="card info-card sales-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Admins</h5>
+          
+
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="ps-3">
+              <h6><a href="{% url 'accounts:users' 'admin' %}">{{admins}}</a> </h6>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- End Sales Card -->
+
+    <!-- Revenue Card -->
+    <div class="col-xxl-4 col-md-6">
+      <div class="card info-card revenue-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Employees</h5>
+
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-people"></i>
+            </div>
+            <div class="ps-3">
+              <h6><a href="{% url 'accounts:users' 'employee' %}">{{employees}}</a> </h6>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- End Revenue Card -->
+    <div class="col-xxl-4 col-md-6">
+      <div class="card info-card revenue-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Active Users</h5>
+
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-circle-fill"></i>
+            </div>
+            <div class="ps-3">
+              <h6><a href="{% url 'accounts:users' 'true' %}">{{active}}</a> </h6>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- End Revenue Card -->
+
+    <div class="col-xxl-4 col-md-6">
+      <div class="card info-card customers-card">
+
+        <div class="card-body">
+          <h5 class="card-title">In-Active Users</h5>
+
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+              <i class="bi bi-circle-fill"></i>
+            </div>
+            <div class="ps-3">
+              <h6><a href="{% url 'accounts:users' 'false' %}">{{in_active}}</a> </h6>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- End Revenue Card -->
+  </div>
+  </div>
+    <div class="col-lg-4">
+
+      <!-- Recent Activity -->
+      <div class="hrmis-scroll">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Board <span>|  {% now "jS F Y H:i" %}</span></h5>
+
+          <div class="activity">
+              {% for board in qs_board %}
+            <div class="activity-item d-flex">
+              <div class="activite-label" style="min-width: 0px;"></div>
+              <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
+              <div class="activity-content">
+                <a href="{% url 'boards:board_details' board.pk %}">{{board.title|title}}</a>
+                <br>
+                <small>Posted: {{board.timestamp|timesince}} ago</small>
+               
+              </div>
+            </div><!-- End activity item-->
+          {% endfor %}
+          </div>
+
+        </div>
+      </div><!-- End Recent Activity -->
+    </div>
+    </div>
+
+  </div>
+
+{% endblock %}

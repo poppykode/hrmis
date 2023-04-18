@@ -1,0 +1,84 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% block title %}Employee Dash{% endblock %}
+{% block pagetitle %}
+Admin Dashboard
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item active">Employee Dashboard</li>
+{% endblock %}
+{% block css %}
+<style>
+  div.hrmis-scroll {
+  height: 350px;
+  overflow: scroll;
+}
+</style>
+{% endblock %}
+{% block content %}
+<div class="row">
+  {% if messages %}
+  {% for message in messages %}
+  <div class="col-md-12">
+  <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+      <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+      </button>
+      {{ message }}
+  </div>
+</div>
+  {% endfor %}
+  {% endif %}
+  <div class="col-lg-8">
+    <div class="row">
+    <!-- Sales Card -->
+    <div class="col-xxl-4 col-md-12">
+      <div class="card info-card sales-card">
+
+        <div class="card-body">
+          <h5 class="card-title">Assigned Tasks</h5>
+          <div class="d-flex align-items-center">
+            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                <i class="bi bi-list-task"></i>
+            </div>
+            <div class="ps-3">
+                <a href="{% url 'tasks:employee_tasks' request.user.pk %}"><h6>{{number_of_tasks}}</h6></a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- End Sales Card -->
+
+  </div>
+  </div>
+    <div class="col-lg-4">
+
+      <!-- Recent Activity -->
+      <div class="hrmis-scroll">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Board <span>|  {% now "jS F Y H:i" %}</span></h5>
+
+          <div class="activity">
+              {% for board in qs_board %}
+            <div class="activity-item d-flex">
+              <div class="activite-label" style="min-width: 0px;"></div>
+              <i class="bi bi-circle-fill activity-badge text-success align-self-start"></i>
+              <div class="activity-content">
+                <a href="{% url 'boards:board_details' board.pk %}">{{board.title|title}}</a>
+                <br>
+                <small>Posted: {{board.timestamp|timesince}} ago</small>
+               
+              </div>
+            </div><!-- End activity item-->
+          {% endfor %}
+          </div>
+
+        </div>
+      </div><!-- End Recent Activity -->
+    </div>
+    </div>
+
+  </div>
+
+{% endblock %}

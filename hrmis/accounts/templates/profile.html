@@ -1,0 +1,177 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+Profile for {{obj.get_full_name|title}}
+{% endblock %}
+{% block pagetitle %}
+{{obj.get_full_name|title}}
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item"><a href="{% url 'accounts:users' %}">Users</a></li>
+<li class="breadcrumb-item active">
+    Profile for {{obj.get_full_name|title}}
+</li>
+{% endblock %}
+{% block content %}
+<section class="section profile">
+    <div class="row">
+        <div class="col-md-12">
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                </button>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+      <div class="col-xl-4">
+
+        <div class="card">
+          <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+            <img src="{% static 'assets/img/profile-img.jpg' %}" alt="Profile" class="rounded-circle">
+            <h2>{{obj.get_full_name|title}}</h2>
+            <h3>{{obj.designation|title}}</h3>
+            <p>Date Joined: {{obj.date_joined}}</p>
+            {% if obj.is_employee %}
+            <hr>
+            <p><a href="{% url 'tasks:employee_tasks' obj.pk %}">Tasks</a></p>
+            <p><a href="">Productivity</a></p>
+            {% endif %}
+       
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-xl-8">
+
+        <div class="card">
+          <div class="card-body pt-3">
+            <!-- Bordered Tabs -->
+            <ul class="nav nav-tabs nav-tabs-bordered" role="tablist">
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview" aria-selected="true" role="tab">Overview</button>
+              </li>
+
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit" aria-selected="false" role="tab" tabindex="-1">Edit Profile</button>
+              </li>
+
+              <!-- <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings" aria-selected="false" role="tab" tabindex="-1">Settings</button>
+              </li> -->
+            {% if request.user.pk == obj.pk %}
+            <li class="nav-item" role="presentation">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password" aria-selected="false" role="tab" tabindex="-1">Change Password</button>
+            </li>
+            {% endif %}
+
+            </ul>
+            <div class="tab-content pt-2">
+
+              <div class="tab-pane fade profile-overview active show" id="profile-overview" role="tabpanel">
+              
+                <h5 class="card-title">Profile Details</h5>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label ">Full Name</div>
+                  <div class="col-lg-9 col-md-8">{{obj.get_full_name|title}}</div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-4 label">Gender</div>
+                    <div class="col-lg-9 col-md-8">{{obj.gender|title}}</div>
+                  </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Designation</div>
+                  <div class="col-lg-9 col-md-8">{{obj.designation|title}}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Phone Number</div>
+                  <div class="col-lg-9 col-md-8">{{obj.phone_number}}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Email</div>
+                  <div class="col-lg-9 col-md-8">{{obj.email}}</div>
+                </div>
+
+                <div class="row">
+                  <div class="col-lg-3 col-md-4 label">Address</div>
+                  <div class="col-lg-9 col-md-8">{{obj.address}}</div>
+                </div>
+
+              </div>
+              
+              <div class="tab-pane fade profile-edit pt-3" id="profile-edit" role="tabpanel">
+
+                <form action="{% url 'accounts:edit_profile_admin' obj.pk %}" method="POST">
+                    {% csrf_token %}
+                      <div class="row mb-3"> 
+                        <div class="col-sm-12">
+                            {{ form.username|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.last_name|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.phone_number|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.designation|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-6">
+                            {{ form.gender|as_crispy_field }}
+                        </div>
+                        <div class="col-sm-12">
+                            {{ form.address|as_crispy_field }}
+                        </div>
+                      </div>
+                
+        
+                      <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Update User Details</button>
+        
+                      </div>
+                    </form><!-- End Horizontal Form -->
+
+              </div>
+             
+              {% if request.user.pk == obj.pk %}
+              <div class="tab-pane fade pt-3" id="profile-change-password" role="tabpanel">
+                <!-- Change Password Form -->
+                <form action="{% url 'accounts:change_password' obj.pk %}" method="POST">
+                    {% csrf_token %}
+                  <div class="row mb-3">
+                    {{ form_change_password|crispy}}
+                  </div>
+
+                  <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Change Password</button>
+                  </div>
+                </form><!-- End Change Password Form -->
+
+              </div>
+              {% endif %}
+
+            </div><!-- End Bordered Tabs -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+{% endblock %}

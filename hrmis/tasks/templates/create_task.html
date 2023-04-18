@@ -1,0 +1,97 @@
+{% extends 'shared.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+{% if type == 'create' %}
+Create Task for Project {{obj.name|title}}
+{% else %}
+Update Task {{obj.title|title}}
+{% endif %}
+
+{% endblock %}
+{% block pagetitle %}
+{% if type == 'create' %}
+Create Task for Project {{obj.name|title}}
+{% else %}
+Update Task {{obj.title|title}}
+{% endif %}
+{% endblock %}
+{% block breadcrum %}
+<li class="breadcrumb-item"><a href="#">Project {{obj.project.name|title}}</a></li>
+<li class="breadcrumb-item active">
+{% if type == 'create' %}
+Create Task for Project {{obj.name|title}}
+{% else %}
+Update Task {{obj.title|title}} for project {{obj.project.name|title}}
+{% endif %}
+</li>
+{% endblock %}
+{% block content %}
+<section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+
+        <div class="card">
+          <div class="card-body">
+       
+            <h5 class="card-title">Enter user details in the form below
+
+           
+            </h5>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                </button>
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+ 
+            <!-- Horizontal Form -->
+          {% if type == 'create' %}
+          <form action="{% url 'tasks:create_task' obj.pk %}" method="POST">
+          {% else %}
+          <form action="{% url 'tasks:task_update' obj.pk %}" method="POST">
+          {% endif %}
+            {% csrf_token %}
+              <div class="row mb-3"> 
+                <div class="col-sm-12">
+                    {{ form.title|as_crispy_field }}
+                </div>
+                  <div class="col-sm-6">
+                 
+                  {{ form.resource|as_crispy_field }}
+              </div>
+    
+                <div class="col-sm-6">
+                  {{ form.priority|as_crispy_field }}
+              </div>
+              <div class="col-sm-6">
+                {{ form.start_date|as_crispy_field }}
+            </div>
+            <div class="col-sm-6">
+              {{ form.end_date|as_crispy_field }}
+          </div>
+              </div>
+              <div class="text-center">
+                
+                <button type="submit" class="btn btn-primary">
+                  {% if type == 'create' %}
+                  Create Task
+                  {% else %}
+                  Update Task
+                  {% endif %}
+                
+                </button>
+                <a href="{% url 'projects:project_details' obj.pk %}" class="btn btn-secondary">Cancel</a>
+              </div>
+            </form><!-- End Horizontal Form -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}
